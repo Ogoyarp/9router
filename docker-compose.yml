@@ -25,6 +25,19 @@ services:
     ports:
       - "8787:8787"
 
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: 9router-cloudflared
+    restart: always
+    command: tunnel --no-autoupdate run
+    environment:
+      # Untuk named tunnel (akun Cloudflare): isi TUNNEL_TOKEN dari dashboard Cloudflare
+      # Untuk quick tunnel (tanpa akun): ganti command di atas menjadi:
+      #   tunnel --no-autoupdate --url http://9router:20128
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - 9router
+
 volumes:
   9router-data:
     name: 9router-data
